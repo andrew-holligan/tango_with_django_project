@@ -1,9 +1,13 @@
 from django.shortcuts import render
+from django.shortcuts import redirect
+from django.urls import reverse
 
 from django.http import HttpResponse
 
 from rango.models import Category
 from rango.models import Page
+from rango.forms import CategoryForm
+from rango.forms import PageForm
 
 
 def index(request):
@@ -41,3 +45,61 @@ def show_category(request, category_name_slug):
         context_dict["pages"] = None
 
     return render(request, "rango/category.html", context=context_dict)
+
+
+def add_category(request):
+    form = CategoryForm()
+
+    # check if HTTP POST
+    if request.method == "POST":
+        form = CategoryForm(request.POST)
+
+        # check form validity
+        if form.is_valid():
+            # save new category to database
+            cat = form.save(commit=True)
+            print(cat, cat.slug)
+            # redirect user back to index page
+            return redirect("/rango/")
+
+        else:
+            # the supplied form contained errors
+            print(form.errors)
+
+    return render(request, "rango/add_category.html", {"form": form})
+
+
+def add_page(request, category_name_slug):
+    try:
+        category = Category.objects.get(slug=category_name_slug)
+    except Category.DoesNotExist:
+        category = None
+
+    # You cannot add a page to a Category that does not exist...
+    if category is None:
+        return redirect("/rango/")
+
+    form = PageForm()
+
+    if request.method == "POST":
+        form = PageForm(request.POST)
+
+        if form.is_valid():
+            if category:
+                page = form.save(commit=False)
+                page.category = category
+                page.views = 0
+                page.save()
+
+                return redirect(
+                    reverse(
+                        "rango:show_category",
+                        kwargs={"category_name_slug": category_name_slug},
+                    )
+                )
+
+        else:
+            print(form.errors)
+
+    context_dict = {"form": form, "category": category}
+    return render(request, "rango/add_page.html", context=context_dict)
