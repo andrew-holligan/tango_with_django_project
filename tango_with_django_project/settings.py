@@ -94,6 +94,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+        "OPTIONS": {
+            "min_length": 6,
+        },
     },
     {
         "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
@@ -133,3 +136,8 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = MEDIA_DIR
 
 MEDIA_URL = "/media/"
+
+
+# Login
+
+LOGIN_URL = "rango:login"
