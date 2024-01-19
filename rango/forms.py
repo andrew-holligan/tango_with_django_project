@@ -1,7 +1,8 @@
 from django import forms
-from rango.models import Page, Category
+from rango.models import Page, Category, UserProfile
 from django.contrib.auth.models import User
-from rango.models import UserProfile
+
+# Create your models here.
 
 
 class CategoryForm(forms.ModelForm):

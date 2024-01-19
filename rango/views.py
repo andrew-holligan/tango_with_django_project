@@ -1,23 +1,54 @@
-from django.shortcuts import render
-from django.shortcuts import redirect
+# 'django' IMPORTS
+
+from django.shortcuts import render, redirect
 from django.urls import reverse
-
 from django.http import HttpResponse
-
-from rango.models import Category
-from rango.models import Page
-
-from rango.forms import CategoryForm
-from rango.forms import PageForm
-from rango.forms import UserForm, UserProfileForm
-
 from django.contrib.auth import authenticate, login, logout
-
 from django.contrib.auth.decorators import login_required
 
-from django.http import HttpResponse
-from django.urls import reverse
-from django.shortcuts import redirect
+# 'rango' IMPORTS
+
+from rango.models import Category, Page
+from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
+
+# OTHER IMPORTS
+
+from datetime import datetime
+
+
+# COOKIES
+
+
+def get_server_side_cookie(request, cookie, default_val=None):
+    # if cookie is in session data, return it
+    # else return default value of the cookie
+    val = request.session.get(cookie)
+    if not val:
+        val = default_val
+    return val
+
+
+def visitor_cookie_handler(request):
+    visits = int(get_server_side_cookie(request, "visits", "1"))
+    last_visit_cookie = get_server_side_cookie(
+        request, "last_visit", str(datetime.now())
+    )
+    last_visit_time = datetime.strptime(last_visit_cookie[:-7], "%Y-%m-%d %H:%M:%S")
+
+    # if it's been more than a day since the last visit...
+    if (datetime.now() - last_visit_time).days > 0:
+        visits = visits + 1
+        # update the last visit cookie now that we have updated the count
+        request.session["last_visit"] = str(datetime.now())
+    else:
+        # set the last visit cookie
+        request.session["last_visit"] = last_visit_cookie
+
+    # update/set the visits cookie
+    request.session["visits"] = visits
+
+
+# TEMPLATE VIEWS
 
 
 def index(request):
@@ -29,13 +60,30 @@ def index(request):
     context_dict["categories"] = category_list
     context_dict["pages"] = page_list
 
-    return render(request, "rango/index.html", context=context_dict)
+    # Call the helper function to handle the cookies
+    visitor_cookie_handler(request)
+
+    # Obtain our Response object early so we can add cookie info
+    response = render(request, "rango/index.html", context=context_dict)
+
+    # Return response back to the user, updating any cookies needing changed
+    return response
 
 
 def about(request):
+    # Call the helper function to handle the cookies
+    visitor_cookie_handler(request)
+
     context_dict = {
-        "boldmessage": "This tutorial has been put together by andrew-holligan"
+        "boldmessage": "This tutorial has been put together by andrew-holligan",
+        "visits": request.session["visits"],
     }
+
+    # cookies
+    if request.session.test_cookie_worked():
+        print("TEST COOKIE WORKED!")
+        request.session.delete_test_cookie()
+
     return render(request, "rango/about.html", context=context_dict)
 
 
