@@ -1,0 +1,25 @@
+<!-- extends base.html -->
+{% extends "rango/base.html" %}
+
+<!-- title block -->
+{% block title_block %}
+  Login
+{% endblock %}
+
+<!-- body block -->
+{% block body_block %}
+  <h1>Login</h1>
+
+  <!-- post to CURRENT file -->
+  <form method="post" action=".">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Log In" />
+    <input type="hidden" name="next" value="{{ next }}" />
+  </form>
+
+  <p>
+    Not registered?
+    <a href="{% url 'registration_register' %}">Register here!</a>
+  </p>
+{% endblock %}
