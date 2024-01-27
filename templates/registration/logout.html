@@ -8,9 +8,18 @@
 
 <!-- body block -->
 {% block body_block %}
-  <h1>Logged Out</h1>
 
-  <p>
-    You have been successfully logged out. Thanks for spending time on Rango!
-  </p>
+  <!-- header message bootstrap jumbotron -->
+  <div class="jumbotron p-4">
+    <div class="container">
+      <h1 class="jumbotron-heading">Rango says...</h1>
+      <div>
+        <h2 class="h2">
+          Logged Out
+        </h2>
+      </div>
+      <strong>You have been successfully logged out. Thanks for spending time on Rango!</strong>
+    </div>
+  </div>
+  
 {% endblock %}

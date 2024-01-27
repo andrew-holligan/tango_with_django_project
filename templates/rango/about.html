@@ -9,19 +9,48 @@
 
 <!-- body block -->
 {% block body_block %}
-  <h1>Rango says...</h1>
 
-  <div>
-    here is the about page.<br />
-    <strong>{{ boldmessage }}</strong><br />
+  <!-- header message bootstrap jumbotron -->
+  <div class="jumbotron p-4">
+    <div class="container">
+      <h1 class="jumbotron-heading">Rango says...</h1>
+      <div>
+        <h2 class="h2">
+          here is the about page.
+        </h2>
+        <strong>{{ boldmessage }}</strong>
+      </div>
+    </div>
   </div>
 
   <!-- cookies - visits -->
-  <p>Visits: {{ visits }}</p>
+  <p style="display:block; text-align:center;">Visits: {{ visits }}</p>
 
-	<!-- static/media images -->
-	<div>
-		<img src="{% static 'images/rango.jpg' %}" alt="Picture of Rango" />
-    <img src="{{ MEDIA_URL }}cat.jpg" alt="Picture of a Cat" />
-	</div>
+  <div class="container">
+
+    <div class="row">
+
+      <!-- static/media images -->
+      <div class="col-md-6">
+        <div class="card mb-6">
+          <div class="card-body">
+            <img src="{% static 'images/rango.jpg' %}" alt="Picture of Rango" 
+            style="width:100%; display:block; margin:auto; border-radius:1%" />
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card mb-6">
+          <div class="card-body">
+            <img src="{{ MEDIA_URL }}cat.jpg" alt="Picture of a Cat" 
+            style="width:100%; display:block; margin:auto; border-radius:1%" />
+          </div>
+        </div>
+      </div>
+
+    </div> 
+
+  </div>
+
 {% endblock %}

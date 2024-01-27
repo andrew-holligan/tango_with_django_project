@@ -9,7 +9,19 @@
 
 <!-- body block -->
 {% block body_block %}
-  <h1>Login to Rango</h1>
+
+  <!-- header message bootstrap jumbotron -->
+  <div class="jumbotron p-4">
+    <div class="container">
+      <h1 class="jumbotron-heading">Rango says...</h1>
+      <div>
+        <h2 class="h2">
+          Login to Rango
+        </h2>
+      </div>
+    </div>
+  </div>
+
   <form id="login_form" method="post" action="{% url 'rango:login' %}">
     {% csrf_token %}
     Username: <input type="text" name="username" value="" size="50" />

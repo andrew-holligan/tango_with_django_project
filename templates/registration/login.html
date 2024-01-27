@@ -8,18 +8,29 @@
 
 <!-- body block -->
 {% block body_block %}
-  <h1>Login</h1>
+
+  <!-- header message bootstrap jumbotron -->
+  <div class="jumbotron p-4">
+    <div class="container">
+      <h1 class="jumbotron-heading">Rango says...</h1>
+      <div>
+        <h2 class="h2">
+          Login
+        </h2>
+      </div>
+    </div>
+  </div>
 
   <!-- post to CURRENT file -->
-  <form method="post" action=".">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Log In" />
-    <input type="hidden" name="next" value="{{ next }}" />
-  </form>
+  <div class="container">
+    <form class="form-signin" role="form" method="post" action=".">
+      {% csrf_token %}
+      <label for="inputUsername" class="sr-only">Username</label>
+      <input type="text" name="username" id="id_username" class="form-control" placeholder="Username" required autofocus>
+      <label for="inputPassword" class="sr-only">Password</label>
+      <input type="password" name="password" id="id_password" class="form-control" placeholder="Password" required>
+      <button class="btn btn-lg btn-primary btn-block" type="submit" value="Submit">Sign in</button>
+    </form>
+  </div>
 
-  <p>
-    Not registered?
-    <a href="{% url 'registration_register' %}">Register here!</a>
-  </p>
 {% endblock %}
